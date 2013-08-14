@@ -1,0 +1,82 @@
+doctype html
+html
+  head
+    meta charset='utf-8'
+    title RSS Notification via im.kayac.com
+    link rel='stylesheet' type='text/css' href='http://yui.yahooapis.com/pure/0.2.1/pure-min.css'
+    link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Fauna+One'
+    style type='text/css'
+      |
+        body {
+          width: 70%;
+          margin: 0 auto;
+        }
+        h1 {
+          text-align: center;
+          font-family: 'Fauna One', serif;
+        }
+        .pure-button-success,
+        .pure-button-error,
+        .pure-button-warning,
+        .pure-button-secondary {
+          color: white;
+          border-radius: 4px;
+          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+        .pure-button-success   { background: rgb(28, 184, 65); }
+        .pure-button-error     { background: rgb(202, 60, 60); }
+        .pure-button-warning   { background: rgb(223, 117, 20); }
+        .pure-button-secondary { background: rgb(66, 184, 221); }
+        .error-box {
+          margin: 0 0 0 10%;
+        }
+        .error-box {
+          color: #D33;
+        }
+        .error-box ul {
+          margin-bottom: 5px;
+        }
+
+  body
+    .header
+      h1 RSS Notification via im.kayac.com
+    .content
+      - @rss.errors.any?
+        .error-box
+          ul
+            - @rss.errors.full_messages.each do |message|
+              li #{message}
+      form.pure-form.pure-form-aligned action=(@rss.new_record? ? '/rsses' : "/rsses/#{@rss.id}") method='POST'
+        fieldset
+          .pure-control-group
+            label for='rss[title]' TITLE
+            input.pure-input-2-3 type='text' name='rss[title]' value=@rss.title
+          .pure-control-group
+            label for='rss[url]' URL
+            input.pure-input-2-3 type='text' name='rss[url]' value=@rss.url
+          .pure-controls
+            - if @rss.new_record?
+              button.pure-button.pure-button-primary Create
+            - else
+              input type='hidden' name='_method' value='PUT'
+              button.pure-button.pure-button-primary Update
+              a.pure-button href='/rsses' Back
+      table.pure-table.pure-table-bordered width='100%'
+        thead
+          tr
+            th #
+            th TITLE
+            th URL
+            th width=180 ACTIONS
+        tbody
+          - @rsses.each do |rss|
+            tr
+              td #{rss.id}
+              td #{rss.title}
+              td #{rss.url}
+              td
+                form action="/rsses/#{rss.id}" method='POST'
+                  input type='hidden' name='_method' value='DELETE'
+                  a.pure-button.pure-button-secondary href="/rsses/#{rss.id}/edit" Edit
+                  button.pure-button.pure-button-error Delete
+  
