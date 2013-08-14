@@ -21,6 +21,9 @@ GEM
     args_parser (0.1.6)
     atomic (1.1.12)
     builder (3.1.4)
+    clockwork (0.6.0)
+      activesupport
+      tzinfo (~> 0.3.35)
     dotenv (0.8.0)
     excon (0.25.3)
     feed-normalizer (1.5.2)
@@ -54,6 +57,7 @@ GEM
     multi_json (1.7.9)
     multi_xml (0.5.5)
     netrc (0.7.7)
+    pg (0.16.0)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
@@ -85,10 +89,12 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  clockwork
   feed-normalizer
   foreman
   heroku
   im-kayac
+  pg
   rake
   sinatra
   sinatra-activerecord

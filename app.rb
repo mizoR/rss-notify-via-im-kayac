@@ -10,14 +10,22 @@ require './models/entry'
 class App < Sinatra::Base
   enable :method_override
 
-  @config = {}
-  @config[:env]  = ENV['SINATRA_ENV'] || 'development'
-  @config[:root] = File.dirname __FILE__
-  @config[:database] = begin
-    filepath  = File.join @config[:root], './config/database.yml'
-    databases = YAML.load_file filepath
-    databases[@config[:env]]
+  use Rack::Auth::Basic do |username, password|
+    [username, password] == [ENV['BASIC_USERNAME'], ENV['BASIC_PASSWORD']]
   end
+
+
+  @config = {}
+  @config[:env]  = ENV['RACK_ENV'] || 'development'
+  @config[:root] = File.dirname __FILE__
+  @config[:database] = \
+    if ENV.has_key?('DATABASE_URL')
+      ENV['DATABASE_URL'] + '?reconnect=true&pool=10&timeout=5000'
+    else
+      filepath  = File.join @config[:root], 'config/database.yml'
+      databases = YAML.load_file filepath
+      databases[@config[:env]]
+    end
 
   ActiveRecord::Base.establish_connection(@config[:database])
 
