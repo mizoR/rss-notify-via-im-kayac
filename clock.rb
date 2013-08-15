@@ -10,10 +10,9 @@ include Clockwork
 
 handler do |job|
   puts "Running #{job}"
-  username = ENV.has_key?('IM_KAYAC_USERNAME') ? \
-    ENV['IM_KAYAC_USERNAME'] : raise(ArgumentError)
-  password = ENV.has_key?('IM_KAYAC_PASSWORD') && ENV['IM_KAYAC_PASSWORD']
-  secret   = ENV.has_key?('IM_KAYAC_SECRET')   && ENV['IM_KAYAC_SECRET']
+  username = ENV['IM_KAYAC_USERNAME'] or raise(ArgumentError)
+  password = ENV['IM_KAYAC_PASSWORD']
+  secret   = ENV['IM_KAYAC_SECRET']
 
   Rss.find_each do |rss|
     feed = FeedNormalizer::FeedNormalizer.parse open(rss.url)
@@ -24,7 +23,7 @@ handler do |job|
         :content => entry.content
       )
       case
-      when Entry.exists?(:url => entry.url)
+      when rss.entries.exists?(:url => entry.url)
         # to nothing
       when !entry.save
         # save error
