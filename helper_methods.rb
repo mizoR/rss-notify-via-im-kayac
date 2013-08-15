@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-require './configuration'
 
 module HelperMethods
   def self.included(base)
@@ -20,10 +19,6 @@ module HelperMethods
     end
     private :basic_auth_filter
 
-    def config
-      Configuration.instance
-    end
-    private :config
   end
 
 end
