@@ -73,7 +73,8 @@ html
             tr
               td #{rss.id}
               td #{rss.title}
-              td #{rss.url}
+              td
+                a href=rss.url target='_blank' #{rss.url}
               td
                 form action="/rsses/#{rss.id}" method='POST'
                   input type='hidden' name='_method' value='DELETE'
